@@ -1,6 +1,6 @@
 import FeedbackItem from './FeedbackItem'
-import PropTypes from 'prop-types'
 import { useContext } from 'react'
+import Spinner from './shared/Spinner'
 import FeedbackContext from '../context/FeedbackContext'
 
 // This is another test comment
@@ -13,7 +13,7 @@ function FeedbackList() {
 	}
 
 	return isLoading ? (
-		<h3>Loading...</h3>
+		<Spinner />
 	) : (
 		<div className="feedback-list">
 			{feedback.map((item) => (
