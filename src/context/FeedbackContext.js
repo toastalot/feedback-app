@@ -23,13 +23,22 @@ export const FeedbackProvider = ({ children }) => {
 		setIsLoading(false)
 	}
 
-	const addFeedback = (newFeedback) => {
-		newFeedback.id = uuidv4()
-		setFeedback([newFeedback, ...feedback])
+	const addFeedback = async (newFeedback) => {
+		const response = await fetch(`${SERVER_URL}/feedback`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(newFeedback),
+		})
+		const data = await response.json()
+
+		setFeedback([data, ...feedback])
 	}
 
-	const deleteFeedback = (id) => {
+	const deleteFeedback = async (id) => {
 		if (window.confirm('Are you sure you want to delete?')) {
+			await fetch(`${SERVER_URL}/feedback/${id}`, { method: 'DELETE' })
 			setFeedback(feedback.filter((item) => item.id !== id))
 		}
 	}
@@ -43,9 +52,14 @@ export const FeedbackProvider = ({ children }) => {
 	}
 
 	// update item
-	const updateFeedback = (id, newItem) => {
+	const updateFeedback = async (id, updItem) => {
+		const response = await fetch(`${SERVER_URL}/feedback/${id}`, {
+			method: 'PUT',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify(updItem),
+		})
 		setFeedback(
-			feedback.map((item) => (item.id === id ? { ...item, ...newItem } : item))
+			feedback.map((item) => (item.id === id ? { ...item, ...updItem } : item))
 		)
 		setFeedbackEdit({
 			item: {},
